@@ -46,25 +46,7 @@ void product(){
         while(Pptr!=NULL){
             Qptr=Qheader->link;
             while(Qptr!=NULL){
-                node* new=(node*)malloc(sizeof(node));
-                while(Mptr->link!=NULL){
-                    Mptr=Mptr->link;
-                }
-                Mptr->link=new;
-                new->coeff=(Pptr->coeff)*(Qptr->coeff);
-                if (Pptr->power==0){
-                    new->power=Qptr->power;
-                }
-                else if (Qptr->power==0){
-                    new->power=Pptr->power;
-                }
-                else if(Pptr->power==0 && Qptr->power==0){
-                    new->power=Pptr->power;
-                }
-                else{
-                    new->power=(Pptr->power)+(Qptr->power);
-                }
-                new->link=NULL;
+                insert(Mheader,Pptr->power+Qptr->power,Pptr->coeff*Qptr->coeff);
                 Qptr=Qptr->link;
             }
             Pptr=Pptr->link;
@@ -79,61 +61,26 @@ void sum(){
     else{
         while(Pptr!=NULL && Qptr!=NULL){
             if (Pptr->power==Qptr->power){
-                node* new=(node*)malloc(sizeof(node));
-                while(Sptr->link!=NULL){
-                    Sptr=Sptr->link;
-                }
-                Sptr->link=new;
-                new->coeff=(Pptr->coeff)+(Qptr->coeff);
-                new->power=Pptr->power;
-                new->link=NULL;
+                insert(Sheader,Pptr->power,Pptr->coeff+Qptr->coeff);
                 Pptr=Pptr->link;
                 Qptr=Qptr->link;
             }
             else if (Pptr->power>Qptr->power){
-                node* new=(node*)malloc(sizeof(node));
-                while(Sptr->link!=NULL){
-                    Sptr=Sptr->link;
-                }
-                Sptr->link=new;
-                new->coeff=Pptr->coeff;
-                new->power=Pptr->power;
-                new->link=NULL;
+                insert(Sheader,Pptr->power,Pptr->coeff);
                 Pptr=Pptr->link;
             }           
             else if (Pptr->power<Qptr->power){
-                node* new=(node*)malloc(sizeof(node));
-                while(Sptr->link!=NULL){
-                    Sptr=Sptr->link;
-                }
-                Sptr->link=new;
-                new->coeff=Qptr->coeff;
-                new->power=Qptr->power;
-                new->link=NULL;
+                insert(Sheader,Qptr->power,Qptr->coeff);
                 Qptr=Qptr->link;
             }
         }
         while(Pptr!=NULL){
-            node* new=(node*)malloc(sizeof(node));
-                while(Sptr->link!=NULL){
-                    Sptr=Sptr->link;
-                }
-                Sptr->link=new;
-                new->coeff=Pptr->coeff;
-                new->power=Pptr->power;
-                new->link=NULL;
-                Pptr=Pptr->link;
+            insert(Sheader,Pptr->power,Pptr->coeff);
+            Pptr=Pptr->link;
         }
         while (Qptr!=NULL){
-            node* new=(node*)malloc(sizeof(node));
-                while(Sptr->link!=NULL){
-                    Sptr=Sptr->link;
-                }
-                Sptr->link=new;
-                new->coeff=Qptr->coeff;
-                new->power=Qptr->power;
-                new->link=NULL;
-                Qptr=Qptr->link;
+            insert(Sheader,Qptr->power,Qptr->coeff);
+            Qptr=Qptr->link;
         }
     }
 }
