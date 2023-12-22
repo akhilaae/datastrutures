@@ -1,134 +1,117 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-
-int stack[20],top=-1;
-void push(int);
-char pop();
-int priority(char i);
-
-int main(void){
-	int n;
-	int n1,n2,n3,num;
-	char str[100] ;
-	char *e , x;
-	while(1){
-		printf("CHOOSE:\n1.Infix to postfix\n2.Evaluate postfix\n3.Exit\nYour Option: ");
-		scanf("%d",&n);
-		switch(n){
-			case 1:
-				printf("Enter the infix expression : ");
-				scanf("%s",str);
-				e=str;
-				printf("Postfix : ");
-
-				while(*e!='\0'){
-					if(isalnum(*e)){
-						printf("%c",*e);
-					}
-					else if(*e=='('){
-						push(*e);
-					}
-					else if(*e==')')
-					{
-						while((x=pop())!='(')
-							printf("%c",x);
-					}
-					else {
-						while(priority(stack[top])>=priority(*e))
-							printf("%c",pop());
-						push(*e);
-					}
-						e++;
-					}
-					while(top!=-1)
-						printf("%c",pop());
-					printf("\n");
-					break;
-				case 2:
-				    
-				    printf("Enter the expression : ");
-				    scanf("%s",str);
-				    e=str;
-				    while(*e!= '\0')
-				    {
-				        if(isdigit(*e))
-				        {
-				            num=*e-48;
-				            push(num);
-				        }
-				        else
-				        {
-				            n1=pop();
-				            n2=pop();
-				            switch(*e)
-				            {
-				            case '+':
-				            {
-				                n3=n1+n2;
-				                break;
-				            }
-				            case '-':
-				            {
-				                n3=n2-n1;
-				                break;
-				            }
-				            case '*':
-				            {
-				                n3=n1*n2;
-				                break;
-				            }
-				            case '/':
-				            {
-				                n3=n2/n1;
-				                break;
-				            }
-				            }
-				            push(n3);
-				        }
-				        e++;
-				    }
-				    printf("The result of expression %s = %d\n",str,pop());
-					break;
-			
-			case 3:
-				printf("Terminating all operations\n");
-				exit(1);
-		}
-		printf("\n");
+#include <string.h>
+int top=-1,max=30,i,l,x,y,z,len;
+char stack[30],a[30],c,b[30],s[30];
+void push(char ch){
+  if(top==max-1){
+    printf("overflow");
+    return;
+  }
+  else{
+    top++;
+    stack[top]=ch;
+  }
 }
+char pop(){
+  if(top==-1){
+    printf("under");
+    return;
+  }
+  else{
+    c=stack[top];
+    top--;
+    return c;
+  }
 }
-int priority(char i)
-{
-	if(i=='(')
-		return 0;
-	else if(i=='+'||i=='-')
-		return 1;
-	else if(i=='*'||i=='/')
-		return 2;
-	return 0;
+int priority(char ch){
+  if(ch=='('||ch==')')
+    return 0;
+  if(ch=='^')
+    return 3;
+  if (ch=='*'||ch=='/')
+    return 2;
+  if(ch=='+'||ch=='-')
+    return 1;
 }
-
-void push(int n)
-{
-	if(top==19)
-	{
-		printf("Overflow!!\n ");
-		return;
-	}
-	else{
-		top+=1;
-		stack[top]=n;
-	}
+void topost(){
+  push('(');
+  for(i=0;i<=l;i++){
+    if(a[i]=='^'||a[i]=='*'||a[i]=='/'||a[i]=='+'||a[i]=='-'){
+      if (priority(a[i])<priority(stack[top])){
+        x=pop();
+        printf("%c",x);
+        push(a[i]);
+      }
+      else{
+        push(a[i]);
+      }
+    }
+    else if(a[i]=='('){
+      push(a[i]);
+    }
+    else if(a[i]==')'){
+      while (stack[top]!='('){
+        x=pop();
+        printf("%c",x);
+      }
+      pop();
+    }
+    else{
+      printf("%c",a[i]);
+    }
+  }
 }
-
-char pop()
-{
-	if(top==-1)
-	{
-		return -1;
-	}
-	else{
-		return stack[top--];
-	}
+void evaluate(){
+  for(i=0;i<len;i++){
+    if(b[i]=='^'||b[i]=='*'||b[i]=='/'||b[i]=='+'||b[i]=='-'){
+      x=pop();
+      printf("%d\n",x);
+      y=pop();
+      printf("%d\n",y);
+      switch(b[i]){
+        case '^':{
+          z=y^x;
+          push(z);
+          break;
+        }
+        case '*':{
+          z=y*x;
+          push(z);
+          break;
+        }
+        case '%':{
+          z=y%x;
+          push(z);
+          break;
+        }
+        case '+':{
+          z=(y)+(x);
+          push(z);
+          printf("%d\n",stack[top]);
+          break;
+        }
+        case '-':{
+          z=y-x;
+          push(z);
+          break;
+        }
+      }
+    }
+    else{
+      push(b[i]);
+    }
+  }
+}
+void main(){
+  scanf("%s",a);
+  l=strlen(a);
+  a[l]=')';
+  a[l+1]='\0';
+  topost();
+  scanf("%s",b);
+  len=strlen(b);
+  b[l]=')';
+  b[l+1]='\0';
+  evaluate();
+  printf("%d",stack[top]);
 }
